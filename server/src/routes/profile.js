@@ -105,22 +105,21 @@ router.get("/:userID", async (req, res) => {
     if (!profile) {
       return res.status(404).json({ message: "Profile not found" });
     }
-    res.json(profile);
+
+    // Get the image URL based on the profile's image filename
+    const imageURL = `${req.protocol}://${req.get("host")}/uploads/${
+      profile.profileImage
+    }`;
+
+    // Create a new object with the profile data and image URL
+    const profileDataWithImage = {
+      ...profile._doc,
+      profileImageURL: imageURL,
+    };
+
+    res.json(profileDataWithImage);
   } catch (err) {
     res.json(err);
-  }
-});
-
-router.get("/:profileID", async (req, res) => {
-  try {
-    const profile = await ProfileModel.findOne({ _id: req.params._id });
-
-    // Call the getImage method to retrieve the imageURL
-    const imageURL = await profile.getImage(_id);
-    // Send the image data in the response
-    res.send(response.data);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to get profile image" });
   }
 });
 

@@ -8,27 +8,31 @@ import {
   FaTwitterSquare,
   FaGithubSquare,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Settings = () => {
   const [cookies, _] = useCookies(["access_token"]);
   const userID = useGetUserId();
   const [isProfileFound, setIsProfileFound] = useState(true);
   const [savedProfile, getSavedProfile] = useState();
+  const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
   const [value, setValue] = useState("");
+  const [file, setFile] = useState(null);
 
   const [profile, setProfile] = useState({
-    name: "",
+    accountName: "",
     description: "",
     facebook: "",
     twitter: "",
     github: "",
     userOwner: userID,
-    profileImage: null,
+    profileImage: "",
   });
 
   useEffect(() => {
-    const fetchSavedRecipes = async () => {
+    const fetchSavedProfile = async () => {
       try {
         const response = await axios.get(
           `http://localhost:3001/profile/${userID}`
@@ -42,25 +46,63 @@ const Settings = () => {
       }
     };
 
-    fetchSavedRecipes();
+    fetchSavedProfile();
   }, [userID]);
 
-  // appends name
+  useEffect(() => {
+    // Initialize the profile state with savedProfile values when the component mounts
+    setProfile(savedProfile || {});
+  }, [savedProfile]);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setProfile({ ...profile, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleImageChange = (event) => {
+    const { name, files } = event.target;
+    if (name === "profileImage") {
+      const imageFile = files[0];
+      setProfile({ ...profile, profileImage: imageFile });
+
+      // Display the selected image
+      const reader = new FileReader();
+      reader.onload = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(imageFile);
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("accountName", profile.accountName);
+    formData.append("description", profile.description);
+    formData.append("facebook", profile.facebook);
+    formData.append("twitter", profile.twitter);
+    formData.append("github", profile.github);
+    formData.append("userOwner", profile.userOwner);
+    if (profile.profileImage) {
+      formData.append("profileImage", profile.profileImage);
+    }
+
     try {
-      await axios.post("http://localhost:3001/profile", profile, {
-        headers: { authorization: cookies.access_token },
+      const response = await axios.post(
+        "http://localhost:3001/profile/",
+        formData,
+        {
+          headers: { authorization: cookies.access_token },
+        }
+      );
+      console.log(response.data);
+
+      toast.success("Profile saved successfully!", {
+        position: toast.POSITION.TOP_RIGHT,
       });
-      alert("Profile Created!");
-      console.log(profile);
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -77,14 +119,11 @@ const Settings = () => {
             <label className="text-[15px] font-bold">Your Name</label>
             <input
               className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-              placeholder={
-                isProfileFound && savedProfile?.name
-                  ? savedProfile.name
-                  : "Enter your name"
-              }
-              id="name"
-              name="name"
+              placeholder={"Enter your name"}
+              id="accountName"
+              name="accountName"
               onChange={handleChange}
+              value={profile.accountName || ""}
             />
           </div>
           <div className="flex flex-col items-start pt-5 gap-2 ">
@@ -99,6 +138,7 @@ const Settings = () => {
               name="description"
               id="description"
               onChange={handleChange}
+              value={profile.description || ""}
             ></textarea>
           </div>
           <h1 className="text-center font-bold text-[25px] mt-5">Socials</h1>
@@ -106,38 +146,29 @@ const Settings = () => {
             <FaFacebookSquare size={"30px"} />
             <input
               className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-              placeholder={
-                isProfileFound && savedProfile?.facebook
-                  ? savedProfile.facebook
-                  : "https://www.facebook.com/"
-              }
+              placeholder="https://www.facebook.com/"
               name="facebook"
               id="facebook"
+              value={profile.facebook || ""}
               onChange={handleChange}
             />
             <FaTwitterSquare size={"30px"} />
             <input
               className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-              placeholder={
-                isProfileFound && savedProfile?.twitter
-                  ? savedProfile.twitter
-                  : "https://twitter.com/"
-              }
+              placeholder="https://twitter.com/"
               id="twitter"
               name="twitter"
+              value={profile.twitter || ""}
               onChange={handleChange}
             />
             <FaGithubSquare size={"30px"} />
             <input
               className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-              placeholder={
-                isProfileFound && savedProfile?.github
-                  ? savedProfile.github
-                  : "https://github.com/"
-              }
+              placeholder="https://github.com/"
               id="github"
               name="github"
               onChange={handleChange}
+              value={profile.github || ""}
             />
           </div>
 
@@ -150,16 +181,20 @@ const Settings = () => {
             </label>
             <div className="flex flex-col gap-5 items-center cursor-pointer  mt-5">
               <div className="border-[2px] border-solid border-black h-[45px] w-[45px] rounded-[100%] flex flex-row items-center justify-center hover:border-[blue]">
-                <img
-                  src={`https://avatars.dicebear.com/api/identicon/${userID}.svg`}
-                  className="h-[30px]  rounded-[40%] "
-                />
+                {selectedImage && (
+                  <img
+                    src={selectedImage}
+                    className="h-[30px] rounded-[40%]"
+                    alt="Selected"
+                  />
+                )}
               </div>
               <input
                 type="file"
                 name="profileImage"
                 id="profileImage"
                 className="ml-[80px]"
+                onChange={handleImageChange}
               />
             </div>
           </div>

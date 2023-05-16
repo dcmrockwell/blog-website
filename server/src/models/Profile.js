@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const ProfileSchema = new mongoose.Schema({
-  name: { type: String, required: false },
+  accountName: { type: String, required: false },
 
   description: {
     type: String,

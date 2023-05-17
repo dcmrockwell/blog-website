@@ -200,9 +200,15 @@ const Navbar = () => {
             <li className="text-white text-[20px]">Sign In</li>
           </Link>
         ) : (
-          <li className="text-white text-[20px]" onClick={logout}>
-            Sign Out
-          </li>
+          <Link
+            to="/sign-in"
+            className={location.pathname === "/"}
+            onClick={handleLinkClick}
+          >
+            <li className="text-white text-[20px]" onClick={logout}>
+              Sign Out
+            </li>
+          </Link>
         )}
         {!cookies.access_token ? (
           <Link

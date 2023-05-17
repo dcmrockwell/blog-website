@@ -27,6 +27,7 @@ const SignIn = () => {
         window.localStorage.setItem("username", response.data.username);
         window.localStorage.setItem("createdAt", response.data.createdAt);
         window.localStorage.setItem("profileImage", response.data.profileImage);
+        window.localStorage.setItem("username", response.data.username);
         navigate("/");
       } else {
         toast("Invalid username or password. Try again", {

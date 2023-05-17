@@ -71,12 +71,17 @@ router.post("/", upload, async (req, res) => {
       facebook: req.body.facebook,
       twitter: req.body.twitter,
       github: req.body.github,
+      website: req.body.website,
+      linkedIn: req.body.linkedIn,
       userOwner: req.body.userOwner,
     });
 
     // Set profileImage only if it exists in the request
     if (req.file) {
       profile.profileImage = req.file.filename;
+    } else if (deletedProfile && deletedProfile.profileImage) {
+      // Use the existing profileImage if no new file is uploaded
+      profile.profileImage = deletedProfile.profileImage;
     }
 
     const savedProfile = await profile.save();
@@ -112,7 +117,6 @@ router.get("/:userID", upload, async (req, res) => {
   }
 });
 
-//localhost:3001/uploads/profileImage-1684256301503.jpg
 //fetches the profile picture
 router.use("/images", express.static("uploads"));
 

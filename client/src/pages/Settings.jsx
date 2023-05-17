@@ -7,25 +7,27 @@ import {
   FaFacebookSquare,
   FaTwitterSquare,
   FaGithubSquare,
+  FaLinkedin,
 } from "react-icons/fa";
+import { BsLink45Deg } from "react-icons/bs";
 import toast from "react-hot-toast";
 
 const Settings = () => {
   const [cookies, _] = useCookies(["access_token"]);
   const userID = useGetUserId();
   const [isProfileFound, setIsProfileFound] = useState(true);
-  const [editMode, setEditMode] = useState(false); // Track edit mode
+  const [editMode, setEditMode] = useState(true); // Track edit mode
   const [savedProfile, getSavedProfile] = useState();
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
-  // const [value, setValue] = useState("");
-  // const [file, setFile] = useState(null);
   const [profile, setProfile] = useState({
     accountName: "",
     description: "",
     facebook: "",
     twitter: "",
     github: "",
+    linkedIn: "",
+    website: "",
     userOwner: userID,
     profileImage: "",
   });
@@ -56,11 +58,6 @@ const Settings = () => {
     }
   }, [savedProfile]);
 
-  // const handleChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setProfile({ ...profile, [name]: value });
-  // };
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setProfile((prevProfile) => ({ ...prevProfile, [name]: value }));
@@ -70,7 +67,9 @@ const Settings = () => {
     const { name, files } = event.target;
     if (name === "profileImage") {
       const imageFile = files[0];
-      setProfile({ ...profile, profileImage: imageFile });
+      setProfile((prevProfile) => {
+        return { ...prevProfile, profileImage: imageFile };
+      });
     }
   };
 
@@ -80,14 +79,20 @@ const Settings = () => {
     const formData = new FormData();
     formData.append("accountName", profile.accountName);
     formData.append("description", profile.description);
+    formData.append("website", profile.github);
+    formData.append("github", profile.website);
     formData.append("facebook", profile.facebook);
     formData.append("twitter", profile.twitter);
-    formData.append("github", profile.github);
+    formData.append("linkedIn", profile.linkedIn);
     formData.append("userOwner", profile.userOwner);
 
-    if (profile.profileImage) {
+    // Check if a new file is selected
+    if (profile.profileImage && profile.profileImage.constructor === File) {
       formData.append("profileImage", profile.profileImage);
+    } else {
+      formData.append("profileImage", ""); // Append an empty value to indicate no new image selected
     }
+
     try {
       const response = await axios.post(
         "http://localhost:3001/profile/",
@@ -122,23 +127,22 @@ const Settings = () => {
           className="flex flex-col justify-center items-center"
         >
           <div className="flex flex-col items-start pt-5 gap-2">
-            <label className="text-[15px] font-bold">Your Name</label>
+            <label className="text-[18px] font-bold">Your Name</label>
             <input
-              className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
               placeholder="Enter your name"
               id="accountName"
               name="accountName"
               value={
                 editMode ? profile.accountName : savedProfile?.accountName || ""
               }
-              onClick={toggleEditMode}
               onChange={handleChange}
             />
           </div>
           <div className="flex flex-col items-start pt-5 gap-2">
             <label className="text-[15px] font-bold">Bio</label>
             <textarea
-              className="border-black border-solid border-[1px] min-h-[100px] w-[200px] py-1 px-2 rounded-md resize-y overflow-auto"
+              className="border-black border-solid border-[1px] min-h-[100px] w-[250px] py-1 px-2 rounded-md resize-y overflow-auto"
               placeholder="Tell us a little bit about yourself"
               name="description"
               id="description"
@@ -149,33 +153,52 @@ const Settings = () => {
             ></textarea>
           </div>
           <h1 className="text-center font-bold text-[25px] mt-5">Socials</h1>
-          <div className="flex flex-col items-center pt-5 gap-2">
-            <FaFacebookSquare size="30px" />
+          <div className="flex flex-col items-center pt-5 gap-5">
+            <FaGithubSquare size="30px" />
             <input
-              className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-              placeholder="https://www.facebook.com/"
-              name="facebook"
-              id="facebook"
-              value={editMode ? profile.facebook : savedProfile?.facebook || ""}
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              placeholder="https://github.com/"
+              id="github"
+              name="github"
+              value={editMode ? profile.github : savedProfile?.github || ""}
+              onChange={handleChange}
+            />
+            <FaLinkedin size="30px" />
+            <input
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              placeholder="https://www.linkedin.com/"
+              id="linkedIn"
+              name="linkedIn"
+              value={editMode ? profile.linkedIn : savedProfile?.linkedIn || ""}
+              onChange={handleChange}
+            />
+            <BsLink45Deg size="30px" />
+            <input
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              placeholder="https://yourwebsite.com/"
+              id="website"
+              name="website"
+              value={editMode ? profile.website : savedProfile?.website || ""}
               onChange={handleChange}
             />
             <FaTwitterSquare size="30px" />
             <input
-              className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
               placeholder="https://twitter.com/"
               id="twitter"
               name="twitter"
               value={editMode ? profile.twitter : savedProfile?.twitter || ""}
               onChange={handleChange}
             />
-            <FaGithubSquare size="30px" />
+            <FaFacebookSquare size="30px" />
             <input
-              className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-              placeholder="https://github.com/"
-              id="github"
-              name="github"
-              value={editMode ? profile.github : savedProfile?.github || ""}
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              placeholder="https://www.facebook.com/"
+              name="facebook"
+              id="facebook"
+              value={editMode ? profile.facebook : savedProfile?.facebook || ""}
               onChange={handleChange}
+              readOnly={!editMode}
             />
           </div>
 
@@ -208,13 +231,12 @@ const Settings = () => {
                 id="profileImage"
                 className="ml-[80px]"
                 onChange={handleImageChange}
-                disabled={!editMode} // Disable the input when not in edit mode
               />
             </div>
           </div>
 
           <button
-            className="mt-5 border-black border-[1px] border-solid bg-black text-white px-4 py-2 rounded-lg"
+            className="mt-5 border-black border-[1px] border-solid bg-black text-white font-bold w-[100px] px-4 py-2 rounded-lg"
             type="submit"
           >
             Save
@@ -229,126 +251,3 @@ const Settings = () => {
 };
 
 export default Settings;
-
-{
-  /* <button
-            className="mt-5 border-black border-[1px] border-solid bg-black text-white px-4 py-2 rounded-lg"
-            type="submit"
-          >
-            {isProfileFound ? "Submit Changes" : "Submit Profile"}
-          </button> */
-}
-
-//  <form
-//    onSubmit={handleSubmit}
-//    className="flex flex-col justify-center items-center"
-//  >
-//    <div className="flex flex-col items-start pt-5 gap-2 ">
-//      <label className="text-[15px] font-bold">Your Name</label>
-//      <input
-//        className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-//        placeholder={"Enter your name"}
-//        id="accountName"
-//        name="accountName"
-//        value={
-//          editMode ? profile.accountName : savedProfile?.accountName || ""
-//        }
-//        onChange={handleChange}
-//        onClick={toggleEditMode}
-//        readOnly={!editMode} // Make the input readonly when not in edit mode
-//      />
-//    </div>
-//    <div className="flex flex-col items-start pt-5 gap-2 ">
-//      <label className="text-[15px] font-bold">Bio</label>
-//      <textarea
-//        className="border-black border-solid border-[1px] min-h-[100px] w-[200px] py-1 px-2 rounded-md resize-y overflow-auto"
-//        placeholder={"Tell us a little bit about yourself"}
-//        name="description"
-//        id="description"
-//        value={
-//          editMode ? profile.description : savedProfile?.description || ""
-//        }
-//        onChange={handleChange}
-//        onClick={toggleEditMode}
-//        readOnly={!editMode} // Make the input readonly when not in edit mode
-//      ></textarea>
-//    </div>
-//    <h1 className="text-center font-bold text-[25px] mt-5">Socials</h1>
-//    <div className="flex flex-col items-center pt-5 gap-2 ">
-//      <FaFacebookSquare size={"30px"} />
-//      <input
-//        className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-//        placeholder="https://www.facebook.com/"
-//        name="facebook"
-//        id="facebook"
-//        onChange={handleChange}
-//        onClick={toggleEditMode}
-//      />
-//      <FaTwitterSquare size={"30px"} />
-//      <input
-//        className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-//        placeholder="https://twitter.com/"
-//        id="twitter"
-//        name="twitter"
-//        onChange={handleChange}
-//        onClick={toggleEditMode}
-//      />
-//      <FaGithubSquare size={"30px"} />
-//      <input
-//        className="border-black border-solid border-[1px] w-[200px] py-1 px-2 rounded-md"
-//        placeholder="https://github.com/"
-//        id="github"
-//        name="github"
-//        onChange={handleChange}
-//        onClick={toggleEditMode}
-//      />
-//    </div>
-
-//    <div className="flex flex-col justify-center items-center mt-10 mb-5">
-//      <label
-//        htmlFor="profile"
-//        className="text-center font-bold text-[25px] mt-5"
-//      >
-//        Profile Image
-//      </label>
-//      <div className="flex flex-col gap-5 items-center cursor-pointer  mt-5">
-//        <div className="border-[2px] border-solid border-black h-[45px] w-[45px] rounded-[100%] flex flex-row items-center justify-center hover:border-[blue]">
-//          {selectedImage ? (
-//            <img
-//              src={`http://localhost:3001/profile/images/${savedProfile?.profileImage}`}
-//              className="h-[25px] rounded-[45%]  "
-//            />
-//          ) : (
-//            <img
-//              src={`https://avatars.dicebear.com/api/identicon/${userID}.svg`}
-//              className="h-[25px] rounded-[45%]  "
-//            />
-//          )}
-//        </div>
-//        <input
-//          type="file"
-//          name="profileImage"
-//          id="profileImage"
-//          className="ml-[80px]"
-//          onChange={handleImageChange}
-//        />
-//      </div>
-//    </div>
-
-//    {editMode ? (
-//      <button
-//        className="mt-5 border-black border-[1px] border-solid bg-black text-white px-4 py-2 rounded-lg"
-//        type="submit"
-//      >
-//        Save
-//      </button>
-//    ) : (
-//      <button
-//        className="mt-5 border-black border-[1px] border-solid bg-black text-white px-4 py-2 rounded-lg"
-//        type="button"
-//        onClick={toggleEditMode}
-//      >
-//        Edit
-//      </button>
-//    )}
-//  </form>;

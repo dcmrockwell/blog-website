@@ -19,6 +19,14 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  website: {
+    type: String,
+    required: false,
+  },
+  linkedIn: {
+    type: String,
+    required: false,
+  },
   userOwner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "users",

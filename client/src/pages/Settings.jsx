@@ -47,16 +47,6 @@ const Settings = () => {
     fetchSavedProfile();
   }, [userID]);
 
-  const profilePicture =
-    isProfileFound && savedProfile?.profileImage ? (
-      `http://localhost:3001/profile/images/${savedProfile?.profileImage}`
-    ) : (
-      <img
-        src={`https://avatars.dicebear.com/api/identicon/${userID}.svg`}
-        className="h-[25px] rounded-[45%]  "
-      />
-    );
-
   const fetchSelectedImage = async () => {
     try {
       const response = await axios.get(profilePicture);
@@ -81,11 +71,11 @@ const Settings = () => {
       setProfile({ ...profile, profileImage: imageFile });
 
       // Display the selected image
-      const reader = new FileReader();
-      reader.onload = () => {
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(imageFile);
+      // const reader = new FileReader();
+      // reader.onload = () => {
+      //   setSelectedImage(reader.result);
+      // };
+      // reader.readAsDataURL(imageFile);
     }
   };
 
@@ -150,7 +140,7 @@ const Settings = () => {
               name="description"
               id="description"
               onChange={handleChange}
-              value={savedProfile?.description || ""}
+              value={profile.description || ""}
             ></textarea>
           </div>
           <h1 className="text-center font-bold text-[25px] mt-5">Socials</h1>
@@ -193,24 +183,15 @@ const Settings = () => {
             </label>
             <div className="flex flex-col gap-5 items-center cursor-pointer  mt-5">
               <div className="border-[2px] border-solid border-black h-[45px] w-[45px] rounded-[100%] flex flex-row items-center justify-center hover:border-[blue]">
-                {selectedImage ? (
+                {isProfileFound ? (
                   <img
-                    src={
-                      selectedImage ||
-                      profilePicture ||
-                      `https://avatars.dicebear.com/api/identicon/${userID}.svg`
-                    }
-                    className="h-[38px] rounded-[50%]"
-                    alt="Selected"
+                    src={`http://localhost:3001/profile/images/${savedProfile?.profileImage}`}
+                    className="h-[25px] rounded-[45%]  "
                   />
                 ) : (
                   <img
-                    src={
-                      profilePicture ||
-                      `https://avatars.dicebear.com/api/identicon/${userID}.svg`
-                    }
-                    className="h-[38px] rounded-[50%]"
-                    alt="Selected"
+                    src={`https://avatars.dicebear.com/api/identicon/${userID}.svg`}
+                    className="h-[25px] rounded-[45%]  "
                   />
                 )}
               </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const SignIn = () => {
   const [username, setUsername] = useState("");
@@ -25,15 +26,23 @@ const SignIn = () => {
         window.localStorage.setItem("userID", response.data.userID);
         window.localStorage.setItem("username", response.data.username);
         window.localStorage.setItem("createdAt", response.data.createdAt);
+        window.localStorage.setItem("profileImage", response.data.profileImage);
         navigate("/");
       } else {
-        setError("Invalid username or password. Try again");
+        toast("Invalid username or password. Try again", {
+          icon: "❌",
+          style: {
+            background: "red",
+            color: "white",
+          },
+        });
       }
     } catch (err) {
       console.error(err);
       setError("Invalid username or password");
     }
   };
+
   return (
     <div className="sign-in h-[80vh] w-full overflow-hidden m-auto">
       <div className="flex flex-col text-center gap-7 mt-10 max-w-[1440px] m-auto md:mt-[100px]">

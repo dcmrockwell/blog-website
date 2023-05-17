@@ -11,7 +11,7 @@ router.post("/register", async (req, res) => {
   const user = await UserModel.findOne({ username });
 
   if (user) {
-    return res.json({ message: "User already exists!" });
+    return res.json({ message: "User already exists, please log in" });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,6 +31,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await UserModel.findOne({ username });
+
   if (!user) {
     return res.json({ message: "User Doesn't Exist!" });
   }
@@ -42,15 +43,25 @@ router.post("/login", async (req, res) => {
   }
 
   const token = jwt.sign(
-    { id: user._id, username: user.username, createdAt: user.createdAt },
+    {
+      id: user._id,
+      username: user.username,
+      createdAt: user.createdAt,
+      savedProfile: user.savedProfile,
+      profileImage: user.profileImage,
+    },
     process.env.JWT_SECRET
   );
+
+  console.log(user.savedProfile);
 
   res.json({
     token,
     userID: user._id,
     username: user.username,
     createdAt: user.createdAt,
+    savedProfile: user.savedProfile,
+    profileImage: user.profileImage,
   });
 });
 

@@ -8,8 +8,7 @@ import {
   FaTwitterSquare,
   FaGithubSquare,
 } from "react-icons/fa";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast from "react-hot-toast";
 
 const Settings = () => {
   const [cookies, _] = useCookies(["access_token"]);
@@ -17,6 +16,7 @@ const Settings = () => {
   const [isProfileFound, setIsProfileFound] = useState(true);
   const [savedProfile, getSavedProfile] = useState();
   const [selectedImage, setSelectedImage] = useState(null);
+  const [avatar, setAvatar] = useState();
   const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [file, setFile] = useState(null);
@@ -30,6 +30,8 @@ const Settings = () => {
     userOwner: userID,
     profileImage: "",
   });
+
+  console.log(userID);
 
   useEffect(() => {
     const fetchSavedProfile = async () => {
@@ -49,8 +51,31 @@ const Settings = () => {
     fetchSavedProfile();
   }, [userID]);
 
+  const profilePicture =
+    isProfileFound && savedProfile?.profileImage ? (
+      `http://localhost:3001/profile/images/${savedProfile?.profileImage}`
+    ) : (
+      <img
+        src={`https://avatars.dicebear.com/api/identicon/${userID}.svg`}
+        className="h-[25px] rounded-[45%]  "
+      />
+    );
+
+  console.log(profilePicture);
+
+  const fetchSelectedImage = async () => {
+    try {
+      const response = await axios.get(profilePicture);
+      setSelectedImage(response);
+      setIsProfileFound(true);
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+      setIsProfileFound(false);
+    }
+  };
+
   useEffect(() => {
-    // Initialize the profile state with savedProfile values when the component mounts
     setProfile(savedProfile || {});
   }, [savedProfile]);
 
@@ -77,6 +102,8 @@ const Settings = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    profile.userOwner = userID;
+
     const formData = new FormData();
     formData.append("accountName", profile.accountName);
     formData.append("description", profile.description);
@@ -96,11 +123,8 @@ const Settings = () => {
           headers: { authorization: cookies.access_token },
         }
       );
+      toast.success("Profile Updated!");
       console.log(response.data);
-
-      toast.success("Profile saved successfully!", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
     } catch (error) {
       console.log(error);
     }
@@ -181,10 +205,23 @@ const Settings = () => {
             </label>
             <div className="flex flex-col gap-5 items-center cursor-pointer  mt-5">
               <div className="border-[2px] border-solid border-black h-[45px] w-[45px] rounded-[100%] flex flex-row items-center justify-center hover:border-[blue]">
-                {selectedImage && (
+                {selectedImage ? (
                   <img
-                    src={selectedImage}
-                    className="h-[30px] rounded-[40%]"
+                    src={
+                      selectedImage ||
+                      profilePicture ||
+                      `https://avatars.dicebear.com/api/identicon/${userID}.svg`
+                    }
+                    className="h-[38px] rounded-[50%]"
+                    alt="Selected"
+                  />
+                ) : (
+                  <img
+                    src={
+                      profilePicture ||
+                      `https://avatars.dicebear.com/api/identicon/${userID}.svg`
+                    }
+                    className="h-[38px] rounded-[50%]"
                     alt="Selected"
                   />
                 )}

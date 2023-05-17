@@ -12,6 +12,11 @@ const UserSchema = new mongoose.Schema({
     ref: "profiles",
     default: null,
   },
+  profileImage: {
+    type: String,
+    default: null,
+    required: false,
+  },
 });
 
 export const UserModel = mongoose.model("users", UserSchema);

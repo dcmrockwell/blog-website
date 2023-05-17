@@ -2,18 +2,42 @@ import React from "react";
 import logoNav from "../assets/pen-logo.png";
 import nameLogo from "../assets/name-logo.png";
 import { BiCode, BiCodeAlt } from "react-icons/bi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useGetUserId } from "../hooks/getUserID";
+import { getProfileImage } from "../hooks/profileImage";
+
+import axios from "axios";
 
 const Navbar = () => {
   const [nav, setNav] = useState();
   const handleClick = () => setNav(!nav);
   const [cookies, setCookies] = useCookies(["access_token"]);
+  const [profileDisplay, setProfileDisplay] = useState();
+  const [isProfileFound, setIsProfileFound] = useState(true);
   const navigate = useNavigate();
   const userID = useGetUserId();
+  const profilePhoto = getProfileImage();
+
+  useEffect(() => {
+    const fetchSavedProfile = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3001/profile/${userID}`
+        );
+        setProfileDisplay(response.data.profileImage);
+        setIsProfileFound(true);
+        console.log(response.data.profileImage);
+      } catch (err) {
+        console.error(err);
+        setIsProfileFound(false);
+      }
+    };
+
+    fetchSavedProfile();
+  }, [userID]);
 
   const handleNavClick = () => {
     setNav(!nav);
@@ -73,10 +97,17 @@ const Navbar = () => {
           ) : (
             <div className="cursor-pointer relative" onClick={handleClick}>
               <div className="border-[2px] border-solid border-black h-[40px] w-[40px] rounded-[100%] flex flex-row items-center justify-center hover:border-[blue]">
-                <img
-                  src={`https://avatars.dicebear.com/api/identicon/${userID}.svg`}
-                  className="h-[25px] rounded-[45%]  "
-                />
+                {profileDisplay ? (
+                  <img
+                    src={`http://localhost:3001/profile/images/${profileDisplay}`}
+                    className="h-[25px] rounded-[45%]  "
+                  />
+                ) : (
+                  <img
+                    src={`https://avatars.dicebear.com/api/identicon/${userID}.svg`}
+                    className="h-[25px] rounded-[45%]  "
+                  />
+                )}
               </div>
 
               <div

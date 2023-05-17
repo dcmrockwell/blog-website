@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 // Set storage engine
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "../server/src/uploads");
+    cb(null, "../server/uploads");
   },
   filename: function (req, file, cb) {
     cb(
@@ -86,18 +86,18 @@ router.post("/", upload, async (req, res) => {
     // Update the User document with the _id of the newly created Profile document
     const updatedUser = await UserModel.findOneAndUpdate(
       { _id: req.body.userOwner },
-      { savedProfile: savedProfile._id },
+      { savedProfile: savedProfile._id, profileImage: profile.profileImage },
       { new: true }
     );
 
-    res.json({ savedProfile, imageURL, profileID });
+    res.json(savedProfile);
   } catch (err) {
     res.json(err);
   }
 });
 
 //shows details of the user
-router.get("/:userID", async (req, res) => {
+router.get("/:userID", upload, async (req, res) => {
   try {
     const profile = await ProfileModel.findOne({
       userOwner: req.params.userID,
@@ -106,21 +106,14 @@ router.get("/:userID", async (req, res) => {
       return res.status(404).json({ message: "Profile not found" });
     }
 
-    // Get the image URL based on the profile's image filename
-    const imageURL = `${req.protocol}://${req.get("host")}/uploads/${
-      profile.profileImage
-    }`;
-
-    // Create a new object with the profile data and image URL
-    const profileDataWithImage = {
-      ...profile._doc,
-      profileImageURL: imageURL,
-    };
-
-    res.json(profileDataWithImage);
+    res.json(profile);
   } catch (err) {
     res.json(err);
   }
 });
+
+//localhost:3001/uploads/profileImage-1684256301503.jpg
+//fetches the profile picture
+router.use("/images", express.static("uploads"));
 
 export { router as profileRouter };

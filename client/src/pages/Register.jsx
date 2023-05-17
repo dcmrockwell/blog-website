@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -16,7 +17,7 @@ const Register = () => {
         username,
         password,
       });
-      alert(response.data.message);
+      toast.success(response.data.message);
       navigate("/sign-in");
     } catch (err) {
       console.error(err);

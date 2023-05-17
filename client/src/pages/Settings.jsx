@@ -16,11 +16,9 @@ const Settings = () => {
   const [isProfileFound, setIsProfileFound] = useState(true);
   const [savedProfile, getSavedProfile] = useState();
   const [selectedImage, setSelectedImage] = useState(null);
-  const [avatar, setAvatar] = useState();
   const navigate = useNavigate();
   const [value, setValue] = useState("");
   const [file, setFile] = useState(null);
-
   const [profile, setProfile] = useState({
     accountName: "",
     description: "",
@@ -30,8 +28,6 @@ const Settings = () => {
     userOwner: userID,
     profileImage: "",
   });
-
-  console.log(userID);
 
   useEffect(() => {
     const fetchSavedProfile = async () => {
@@ -61,8 +57,6 @@ const Settings = () => {
       />
     );
 
-  console.log(profilePicture);
-
   const fetchSelectedImage = async () => {
     try {
       const response = await axios.get(profilePicture);
@@ -75,12 +69,8 @@ const Settings = () => {
     }
   };
 
-  useEffect(() => {
-    setProfile(savedProfile || {});
-  }, [savedProfile]);
-
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value, files } = event.target;
     setProfile({ ...profile, [name]: value });
   };
 
@@ -102,8 +92,6 @@ const Settings = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    profile.userOwner = userID;
-
     const formData = new FormData();
     formData.append("accountName", profile.accountName);
     formData.append("description", profile.description);
@@ -114,10 +102,10 @@ const Settings = () => {
     if (profile.profileImage) {
       formData.append("profileImage", profile.profileImage);
     }
-
     try {
       const response = await axios.post(
         "http://localhost:3001/profile/",
+
         formData,
         {
           headers: { authorization: cookies.access_token },
@@ -162,7 +150,7 @@ const Settings = () => {
               name="description"
               id="description"
               onChange={handleChange}
-              value={profile.description || ""}
+              value={savedProfile?.description || ""}
             ></textarea>
           </div>
           <h1 className="text-center font-bold text-[25px] mt-5">Socials</h1>

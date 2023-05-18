@@ -6,7 +6,7 @@ import SignIn from "./pages/SignIn";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-import Footer from "./components/Footer";
+import Write from "./pages/Write";
 import { Toaster } from "react-hot-toast";
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/write-a-story" element={<Write />} />
         </Routes>
         <Toaster />
       </Router>

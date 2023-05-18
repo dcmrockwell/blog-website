@@ -215,7 +215,7 @@ const Settings = () => {
                   <img
                     src={`http://localhost:3001/profile/images/${savedProfile?.profileImage}`}
                     alt="Profile"
-                    className="h-[25px] rounded-[45%]"
+                    className="h-[35px] rounded-[40%]"
                   />
                 ) : (
                   <img

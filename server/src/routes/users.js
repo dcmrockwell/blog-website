@@ -53,8 +53,6 @@ router.post("/login", async (req, res) => {
     process.env.JWT_SECRET
   );
 
-  console.log(user.savedProfile);
-
   res.json({
     token,
     userID: user._id,

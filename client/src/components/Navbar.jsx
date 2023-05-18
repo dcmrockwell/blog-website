@@ -77,14 +77,18 @@ const Navbar = () => {
           <Link to="/">
             <li className="cursor-pointer">Home</li>
           </Link>
-
-          <li className="cursor-pointer">Write A Story</li>
+          <Link to="/write-a-story">
+            <li className="cursor-pointer">Write A Story</li>
+          </Link>
 
           {!cookies.access_token ? (
             ""
           ) : (
             <>
               <li className="cursor-pointer">Saved Stories</li>
+              <Link to="/profile">
+                <li className="cursor-pointer">Profile</li>
+              </Link>
             </>
           )}
 
@@ -100,7 +104,7 @@ const Navbar = () => {
                 {profileDisplay ? (
                   <img
                     src={`http://localhost:3001/profile/images/${profileDisplay}`}
-                    className="h-[25px] rounded-[45%]  "
+                    className="h-[35px] rounded-[45%]  "
                   />
                 ) : (
                   <img
@@ -114,14 +118,9 @@ const Navbar = () => {
                 className={
                   !nav
                     ? "hidden"
-                    : "absolute h-[170px] w-[150px] flex flex-col gap-5 justify-center items-center rounded-lg top-[50px] right-[10px] bg-black border-solid border-[gray] border-[1px]"
+                    : "absolute h-[120px] w-[150px] flex flex-col gap-5 justify-center items-center rounded-lg top-[50px] right-[10px] bg-black border-solid border-[gray] border-[1px]"
                 }
               >
-                <Link to="/profile">
-                  <p className="text-white text-[18px] hover:border-b-[1px] border-solid border-gray-400">
-                    Profile
-                  </p>
-                </Link>
                 <Link to="/settings">
                   <p className="text-white text-[18px] hover:border-b-[1px] border-solid border-gray-400">
                     Settings
@@ -169,7 +168,14 @@ const Navbar = () => {
           <li className="text-white text-[20px] mt-10">Home</li>
         </Link>
 
-        <li className="text-white text-[20px]">Write A Story</li>
+        <Link
+          to="/write-a-story"
+          className={location.pathname === "/write-a-story"}
+          onClick={handleLinkClick}
+        >
+          {" "}
+          <li className="text-white text-[20px]">Write A Story</li>
+        </Link>
         {!cookies.access_token ? (
           ""
         ) : (

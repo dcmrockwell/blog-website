@@ -61,7 +61,7 @@ const Profile = () => {
                 <img
                   src={`http://localhost:3001/profile/images/${savedProfile?.profileImage}`}
                   alt="Profile"
-                  className="h-[25px] rounded-[45%]"
+                  className="h-[50px] rounded-[50%]"
                 />
               ) : (
                 <img

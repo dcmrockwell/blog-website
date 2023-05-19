@@ -1,6 +1,5 @@
 import React from "react";
-import logoNav from "../assets/pen-logo.png";
-import nameLogo from "../assets/name-logo.png";
+import logoNav from "../assets/logoinsight.png";
 import { BiCode, BiCodeAlt } from "react-icons/bi";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +30,6 @@ const Navbar = () => {
         setIsProfileFound(true);
         console.log(response.data.profileImage);
       } catch (err) {
-        console.error(err);
         setIsProfileFound(false);
       }
     };
@@ -52,39 +50,36 @@ const Navbar = () => {
     window.localStorage.removeItem("userID");
     window.localStorage.removeItem("createdAt");
     window.localStorage.removeItem("username");
+    window.localStorage.removeItem("profileImage");
     navigate("/sign-in");
   };
 
   return (
-    <div className=" h-[80px] w-full border-b-[1px] border-b-black  ">
+    <div className=" h-[80px] w-full border-b-[1px] border-slate-400  ">
       <div className="flex flex-row justify-between items-center px-3 py-[10px] max-w-[1440px] m-auto md:px-6">
         <Link to="/">
-          <div className="flex flex-row items-end gap-0 cursor-pointer md:items-center">
+          <div className="flex flex-row items-end gap-2 cursor-pointer md:items-center">
             <img
               src={logoNav}
               alt="Insight Ink"
-              className="hidden md:block h-[60px] "
+              className="hidden md:block h-[50px] "
             />
-            <img
-              src={nameLogo}
-              alt="Insight Ink"
-              className="w-[170px] mt-3 md:mt-0"
-            />
+            <h1 className="mt-2 font-bold text-[25px]">Insight Ink</h1>
           </div>
         </Link>
 
-        <ul className="hidden lg:flex flex-row items-center gap-7">
+        <ul className="hidden lg:flex flex-row mt-2 items-center gap-7">
           <Link to="/">
             <li className="cursor-pointer">Home</li>
-          </Link>
-          <Link to="/write-a-story">
-            <li className="cursor-pointer">Write A Story</li>
           </Link>
 
           {!cookies.access_token ? (
             ""
           ) : (
             <>
+              <Link to="/write-a-story">
+                <li className="cursor-pointer">Write A Story</li>
+              </Link>
               <li className="cursor-pointer">Saved Stories</li>
               <Link to="/profile">
                 <li className="cursor-pointer">Profile</li>

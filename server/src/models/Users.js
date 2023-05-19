@@ -17,6 +17,13 @@ const UserSchema = new mongoose.Schema({
     default: null,
     required: false,
   },
+  savedStories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "profiles",
+      default: null,
+    },
+  ],
 });
 
 export const UserModel = mongoose.model("users", UserSchema);

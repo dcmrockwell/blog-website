@@ -5,6 +5,7 @@ import { UserModel } from "../models/Users.js";
 import multer from "multer";
 import path from "path";
 import dotenv from "dotenv";
+import { verifyToken } from "./users.js";
 
 const router = express.Router();
 
@@ -57,7 +58,7 @@ function checkFileType(file, cb) {
   }
 }
 
-router.post("/", upload, async (req, res) => {
+router.post("/", verifyToken, upload, async (req, res) => {
   try {
     // Find the existing Profile document and delete it
     const deletedProfile = await ProfileModel.findOneAndDelete({
@@ -102,7 +103,7 @@ router.post("/", upload, async (req, res) => {
 });
 
 //shows details of the user
-router.get("/:userID", upload, async (req, res) => {
+router.get("/:userID", async (req, res) => {
   try {
     const profile = await ProfileModel.findOne({
       userOwner: req.params.userID,

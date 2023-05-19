@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-
+import React, { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import Register from "./pages/Register";
@@ -13,15 +13,18 @@ function App() {
   return (
     <>
       <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/write-a-story" element={<Write />} />
-        </Routes>
+        <>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/write-a-story" element={<Write />} />
+          </Routes>
+        </>
+
         <Toaster />
       </Router>
     </>

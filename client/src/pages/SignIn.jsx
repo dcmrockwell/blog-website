@@ -24,7 +24,6 @@ const SignIn = () => {
       if (response.data.userID) {
         setCookies("access_token", response.data.token);
         window.localStorage.setItem("userID", response.data.userID);
-        window.localStorage.setItem("username", response.data.username);
         window.localStorage.setItem("createdAt", response.data.createdAt);
         window.localStorage.setItem("profileImage", response.data.profileImage);
         window.localStorage.setItem("username", response.data.username);

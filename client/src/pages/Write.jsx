@@ -3,6 +3,7 @@ import { useGetUserId } from "../hooks/getUserID";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const Write = () => {
   const [cookies, _] = useCookies(["access_token"]);
@@ -306,6 +307,7 @@ const Write = () => {
               </div>
             )}
           </div>
+
           <button
             className="mt-5 border-black border-[1px] border-solid bg-black text-white font-bold w-[200px] px-4 py-2 rounded-lg"
             type="submit"

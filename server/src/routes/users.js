@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { UserModel } from "../models/Users.js";
 
 const router = express.Router();
+dotenv.config();
 
 router.post("/register", async (req, res) => {
   const { username, password } = req.body;

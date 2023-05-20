@@ -2,12 +2,15 @@ import express from "express";
 import mongoose from "mongoose";
 import multer from "multer";
 import path from "path";
-import dotenv from "dotenv";
 import { WriteModel } from "../models/Write.js";
 import { UserModel } from "../models/Users.js";
 import { verifyToken } from "./users.js";
+import dotenv from "dotenv";
+import tinify from "tinify";
 
 const router = express.Router();
+dotenv.config();
+tinify.key = process.env.TINIFY_KEY;
 
 router.get("/", async (req, res) => {
   try {
@@ -58,7 +61,25 @@ function checkFileType(file, cb) {
   }
 }
 
-router.post("/", verifyToken, upload, async (req, res) => {
+// Middleware for compressing and resizing image using TinyPNG
+const compressImage = async (req, res, next) => {
+  if (!req.file) {
+    return next();
+  }
+
+  const filePath = req.file.path;
+
+  try {
+    // Compress the image using TinyPNG
+    const source = tinify.fromFile(filePath);
+    await source.toFile(filePath);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.post("/", verifyToken, upload, compressImage, async (req, res) => {
   try {
     const write = new WriteModel({
       title: req.body.title,
@@ -93,7 +114,7 @@ router.post("/", verifyToken, upload, async (req, res) => {
   }
 });
 
-router.get("/published/ids/:userID", async (req, res) => {
+router.get("/published/:userID", async (req, res) => {
   try {
     const user = await UserModel.findById(req.params.userID);
     res.json({ savedStories: user?.savedStories });
@@ -101,5 +122,7 @@ router.get("/published/ids/:userID", async (req, res) => {
     res.json(err);
   }
 });
+
+router.use("/images", express.static("articles"));
 
 export { router as writeRouter };

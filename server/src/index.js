@@ -2,14 +2,12 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
 import { userRouter } from "./routes/users.js";
 import { profileRouter } from "./routes/profile.js";
 import { writeRouter } from "./routes/Write.js";
 
-dotenv.config();
-
 const app = express();
+dotenv.config();
 
 //MIDDLEWARE CONVERT DATA FROM JSON
 app.use(express.json());
@@ -26,5 +24,5 @@ mongoose.connect(`${process.env.MONGOOSE_URL}`, {
 });
 
 //STARTING THE API / SERVER
-const port = process.env.PORT;
-app.listen(3001, () => console.log("SERVER STARTED"));
+const port = process.env.MONGO_PORT;
+app.listen(port, () => console.log("SERVER STARTED"));

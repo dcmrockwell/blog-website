@@ -6,8 +6,11 @@ import multer from "multer";
 import path from "path";
 import dotenv from "dotenv";
 import { verifyToken } from "./users.js";
+import tinify from "tinify";
 
 const router = express.Router();
+dotenv.config();
+tinify.key = process.env.TINIFY_KEY;
 
 router.get("/", async (req, res) => {
   try {
@@ -58,7 +61,25 @@ function checkFileType(file, cb) {
   }
 }
 
-router.post("/", verifyToken, upload, async (req, res) => {
+// Middleware for compressing and resizing image using TinyPNG
+const compressImage = async (req, res, next) => {
+  if (!req.file) {
+    return next();
+  }
+
+  const filePath = req.file.path;
+
+  try {
+    // Compress the image using TinyPNG
+    const source = tinify.fromFile(filePath);
+    await source.toFile(filePath);
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.post("/", verifyToken, upload, compressImage, async (req, res) => {
   try {
     // Find the existing Profile document and delete it
     const deletedProfile = await ProfileModel.findOneAndDelete({

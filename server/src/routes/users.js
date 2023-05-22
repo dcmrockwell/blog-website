@@ -8,25 +8,38 @@ const router = express.Router();
 dotenv.config();
 
 router.post("/register", async (req, res) => {
-  const { username, password } = req.body;
-  const user = await UserModel.findOne({ username });
+  const { username, email, password } = req.body;
+  const user = await UserModel.findOne({ $or: [{ username }, { email }] });
 
   if (user) {
-    return res.json({ message: "User already exists, please log in" });
+    return res.json({
+      message: "Username or email already exists, please log in",
+    });
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
 
   const newUser = new UserModel({
     username,
-    password: hashedPassword,
+    email,
+    password,
     createdAt: new Date(),
   });
-  await newUser.save();
 
-  res.json({
-    message: "User Registered Successfully!",
-  });
+  try {
+    const errors = newUser.validateSync();
+    if (errors) {
+      const errorMessage = Object.values(errors.errors)
+        .map((error) => error.message)
+        .join("\n");
+      throw new Error(errorMessage);
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    newUser.password = hashedPassword;
+    await newUser.save();
+    res.json({ message: "User Registered Successfully!" });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 });
 
 router.post("/login", async (req, res) => {

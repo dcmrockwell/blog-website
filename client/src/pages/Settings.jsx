@@ -236,6 +236,40 @@ const Settings = () => {
           </div>
 
           <button
+            className="mt-5 border-black border-[1px] border-solid bg-black text-white font-bold w-[150px] px-4 py-2 rounded-lg"
+            type="submit"
+          >
+            Update Profile
+          </button>
+        </form>
+
+        <form className="flex flex-col items-center gap-5 m-10">
+          <h1 className="text-center font-bold text-[25px] mt-5">
+            Account Settings
+          </h1>
+          <div className="flex flex-col">
+            <label className="text-[18px] font-bold">Email</label>
+            <input
+              placeholder="Enter your Email"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-[18px] font-bold">Username</label>
+            <input
+              placeholder="Enter your Username"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-[18px] font-bold">Password</label>
+            <input
+              placeholder="Enter your password"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+            />
+          </div>
+
+          <button
             className="mt-5 border-black border-[1px] border-solid bg-black text-white font-bold w-[100px] px-4 py-2 rounded-lg"
             type="submit"
           >

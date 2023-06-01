@@ -106,17 +106,25 @@ router.post("/", verifyToken, upload, compressImage, async (req, res) => {
       profile.profileImage = deletedProfile.profileImage;
     }
 
+    // if (req.body) {
+    //   profile.profileEmail = req.body.email;
+    // } else if (deletedProfile && deletedProfile.profileEmail) {
+    //   profile.profileEmail = deletedProfile.profileEmail;
+    // }
+
     const savedProfile = await profile.save();
 
     const profileID = savedProfile._id;
 
     // Update the User document with the _id of the newly created Profile document
+
     const updatedUser = await UserModel.findOneAndUpdate(
       { _id: req.body.userOwner },
       { savedProfile: savedProfile._id, profileImage: profile.profileImage },
       { new: true }
     );
 
+    console.log(profile.profileEmail);
     res.json(savedProfile);
   } catch (err) {
     res.json(err);

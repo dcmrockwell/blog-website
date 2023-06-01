@@ -120,16 +120,16 @@ const Settings = () => {
   return (
     <div className=" w-full m-auto overflow-hidden">
       <div className="flex flex-col text-center items-center gap-7 mt-10 mb-10 max-w-[1440px] m-auto xl:mb-[100px]">
-        <h1 className="text-[25px] font-bold"> Settings</h1>
+        <h1 className="text-[25px] font-bold"> Profile Settings</h1>
 
         <form
           onSubmit={handleSubmit}
           className="flex flex-col justify-center items-center"
         >
-          <div className="flex flex-col items-start pt-5 gap-2">
-            <label className="text-[18px] font-bold">Your Name</label>
+          <div className="flex flex-col items-center pt-5 gap-2">
+            <label className="text-[18px] font-bold ">Your Name</label>
             <input
-              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md text-center"
               placeholder="Enter your name"
               id="accountName"
               name="accountName"
@@ -139,10 +139,10 @@ const Settings = () => {
               onChange={handleChange}
             />
           </div>
-          <div className="flex flex-col items-start pt-5 gap-2">
+          <div className="flex flex-col items-center pt-5 gap-2">
             <label className="text-[15px] font-bold">Bio</label>
             <textarea
-              className="border-black border-solid border-[1px] min-h-[100px] w-[250px] py-1 px-2 rounded-md resize-y overflow-auto"
+              className="border-black border-solid border-[1px] min-h-[100px] w-[250px] py-1 px-2 rounded-md resize-y overflow-auto text-center"
               placeholder="Tell us a little bit about yourself"
               name="description"
               id="description"
@@ -156,7 +156,7 @@ const Settings = () => {
           <div className="flex flex-col items-center pt-5 gap-5">
             <FaGithubSquare size="30px" />
             <input
-              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md text-center"
               placeholder="https://github.com/"
               id="github"
               name="github"
@@ -165,7 +165,7 @@ const Settings = () => {
             />
             <FaLinkedin size="30px" />
             <input
-              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md text-center"
               placeholder="https://www.linkedin.com/"
               id="linkedIn"
               name="linkedIn"
@@ -174,7 +174,7 @@ const Settings = () => {
             />
             <BsLink45Deg size="30px" />
             <input
-              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md text-center"
               placeholder="https://yourwebsite.com/"
               id="website"
               name="website"
@@ -183,7 +183,7 @@ const Settings = () => {
             />
             <FaTwitterSquare size="30px" />
             <input
-              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md text-center"
               placeholder="https://twitter.com/"
               id="twitter"
               name="twitter"
@@ -192,7 +192,7 @@ const Settings = () => {
             />
             <FaFacebookSquare size="30px" />
             <input
-              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
+              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md text-center"
               placeholder="https://www.facebook.com/"
               name="facebook"
               id="facebook"
@@ -233,6 +233,26 @@ const Settings = () => {
                 onChange={handleImageChange}
               />
             </div>
+
+            <h1 className="text-center font-bold text-[25px] mt-[50px]">
+              Account Settings
+            </h1>
+            <div className="flex flex-col gap-5 mt-4">
+              <div className="flex flex-col">
+                <label className="text-[15px] font-bold">Email</label>
+                <input
+                  placeholder="Enter your Email"
+                  className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md text-center"
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="text-[15px] font-bold">Username</label>
+                <input
+                  placeholder="Enter your Username"
+                  className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md text-center"
+                />
+              </div>
+            </div>
           </div>
 
           <button
@@ -240,40 +260,6 @@ const Settings = () => {
             type="submit"
           >
             Update Profile
-          </button>
-        </form>
-
-        <form className="flex flex-col items-center gap-5 m-10">
-          <h1 className="text-center font-bold text-[25px] mt-5">
-            Account Settings
-          </h1>
-          <div className="flex flex-col">
-            <label className="text-[18px] font-bold">Email</label>
-            <input
-              placeholder="Enter your Email"
-              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[18px] font-bold">Username</label>
-            <input
-              placeholder="Enter your Username"
-              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-[18px] font-bold">Password</label>
-            <input
-              placeholder="Enter your password"
-              className="border-black border-solid border-[1px] w-[250px] py-2 px-2 rounded-md"
-            />
-          </div>
-
-          <button
-            className="mt-5 border-black border-[1px] border-solid bg-black text-white font-bold w-[100px] px-4 py-2 rounded-lg"
-            type="submit"
-          >
-            Save
           </button>
         </form>
       </div>

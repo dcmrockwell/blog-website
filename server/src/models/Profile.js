@@ -31,6 +31,16 @@ const ProfileSchema = new mongoose.Schema({
     ref: "users",
     required: true,
   },
+  email: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+    required: false,
+  },
+  username: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+    required: false,
+  },
   profileImage: { type: String, required: false },
 });
 

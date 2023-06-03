@@ -106,6 +106,12 @@ router.post("/", verifyToken, upload, compressImage, async (req, res) => {
       profile.profileImage = deletedProfile.profileImage;
     }
 
+    // if (req.body) {
+    //   profile.profileEmail = req.body.email;
+    // } else if (deletedProfile && deletedProfile.profileEmail) {
+    //   profile.profileEmail = deletedProfile.profileEmail;
+    // }
+
     const savedProfile = await profile.save();
 
     const profileID = savedProfile._id;
